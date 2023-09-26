@@ -6,12 +6,14 @@ import { Button, ProductCardLayout, ProductGridLayout } from "tp-kit/components"
 import { ProductFiltersResult } from "../types";
 import { filterProducts } from "../utils/filter-products";
 import Link from "next/link";
+import { useStore } from "../../node_modules/zustand/react";
 
 type Props = {
   categories: ProductsCategoryData[];
   showFilters?: boolean
 };
 
+import { addLine } from "../hooks/use-cart";
 const ProductList: FC<Props> = memo(function ({ categories, showFilters = false }) {
   const [filters, setFilters] = useState<ProductFiltersResult | undefined>();
   const filteredCategories = useMemo(() => filterProducts(categories, filters), [filters, categories]);
@@ -36,7 +38,8 @@ const ProductList: FC<Props> = memo(function ({ categories, showFilters = false 
                 <ProductCardLayout
                   product={product}
                   button={
-                    <Button variant="ghost" className="flex-1 !py-4">
+                    <Button variant="ghost" className="flex-1 !py-4" onClick={() => addLine(product)}
+                    >
                       Ajouter au panier
                     </Button>
                   }

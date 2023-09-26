@@ -3,7 +3,7 @@ import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
 import { Button, ProductCardLayout, SectionContainer } from "tp-kit/components";
 import { ProductCartLine } from "../../../tp-kit/components/products/product-cart-line";
 const products = PRODUCTS_CATEGORY_DATA[0].products.slice(0, 3);
-
+import { addLine } from "../../hooks/use-cart";
 export default function DevCartPage() {
   return (
     <SectionContainer
@@ -16,7 +16,12 @@ export default function DevCartPage() {
           <ProductCardLayout
             key={product.id}
             product={product}
-            button={<Button variant={"ghost"} fullWidth>Ajouter au panier</Button>}
+            button={
+              <Button variant="ghost" className="flex-1 !py-4" onClick={() => addLine(product)}
+              >
+                Ajouter au panier
+              </Button>
+            }
           />
         ))}
       </section>
