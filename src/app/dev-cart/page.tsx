@@ -7,6 +7,7 @@ import { addLine, useCart, updateLine, computeCartTotal,removeLine,clearCart } f
 import { use, useEffect } from "react";
 import  Cart  from "../../components/cart";
 import CartCounter from "../../components/cartCounter";
+import AddToCartButton from "../../components/addToCartButton";
 export default function DevCartPage() {
   console.log("render DevCartPage");
   //Je constate qu'il y'a un render à chaque fois que je clique sur un des boutons/ a chaque fois que je modifie le panier
@@ -24,10 +25,9 @@ export default function DevCartPage() {
             key={product.id}
             product={product}
             button={
-              <Button variant="ghost" className="flex-1 !py-4" onClick={() => addLine(product)}
-              >
-                Ajouter au panier
-              </Button>
+              <AddToCartButton
+                product={product}
+              />
             }
           />
         ))}

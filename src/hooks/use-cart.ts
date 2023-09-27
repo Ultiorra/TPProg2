@@ -4,6 +4,7 @@ import create from 'zustand';
 import { ProductData } from '../../tp-kit/types';
 import { Cartdata } from '../types';
 import { ProductLineData } from '../types';
+import { wait } from 'tp-kit/utils/wait';
 
 export const useCart = create<Cartdata>(() => ({
   lines: [],
@@ -17,7 +18,8 @@ export const useCart = create<Cartdata>(() => ({
  * 
  * @param product 
  */
-export function addLine(product: ProductData) {
+export async function addLine(product: ProductData) {
+    await wait(1000);
     const cartItems = useCart.getState().lines;
     const productIndex = cartItems.findIndex((item) => item.product.id === product.id);
     let countt = useCart.getState().count;

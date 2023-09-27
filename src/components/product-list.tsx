@@ -7,7 +7,7 @@ import { ProductFiltersResult } from "../types";
 import { filterProducts } from "../utils/filter-products";
 import Link from "next/link";
 import { useStore } from "../../node_modules/zustand/react";
-
+import AddToCartButton from "../components/addToCartButton";
 type Props = {
   categories: ProductsCategoryData[];
   showFilters?: boolean
@@ -38,10 +38,9 @@ const ProductList: FC<Props> = memo(function ({ categories, showFilters = false 
                 <ProductCardLayout
                   product={product}
                   button={
-                    <Button variant="ghost" className="flex-1 !py-4" onClick={() => addLine(product)}
-                    >
-                      Ajouter au panier
-                    </Button>
+                    <AddToCartButton 
+                      product={product}
+                    />
                   }
                 />
               )}
