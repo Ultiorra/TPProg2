@@ -5,8 +5,11 @@ import { ProductCartLine } from "../../../tp-kit/components/products/product-car
 const products = PRODUCTS_CATEGORY_DATA[0].products.slice(0, 3);
 import { addLine, useCart, updateLine, computeCartTotal,removeLine,clearCart } from "../../hooks/use-cart";
 import { use, useEffect } from "react";
+import  Cart  from "../../components/cart";
 export default function DevCartPage() {
-  const lines = useCart((state) => state.lines);
+  console.log("render DevCartPage");
+  //Je constate qu'il y'a un render à chaque fois que je clique sur un des boutons/ a chaque fois que je modifie le panier
+ 
   return (
     <SectionContainer
       className="py-36"
@@ -27,45 +30,9 @@ export default function DevCartPage() {
           />
         ))}
       </section>
-      {/* /Produits */}
 
-      {/* Panier */}
-      <section className="w-full lg:w-1/3 space-y-8">
-        {
-          lines.map((line) => (
-            <ProductCartLine
-              key={line.product.id}
-              product={line.product}
-              qty={line.qty}
-              onQtyChange={(quantity) => {
-                line.qty = quantity;
-                updateLine(line);
-              } }
-              onDelete={() => removeLine(line.product.id)}  
-            />
-          ))
-          
-        }
-        <div className={` text-sm`}>
-          <div className="flex flex-row gap-4 justify-between items-center mb-2">
-            <h3 className="w-full">Total</h3>
-            <span className="text-right"> {
-              computeCartTotal(lines)
-            }
-            </span>
-          </div>
-          </div>
-        
+      <Cart/>
 
-          <Button variant={"primary"} fullWidth>Commander</Button>
-
-        
-          
-
-				<Button variant={"outline"} fullWidth onClick={() => clearCart()}>
-        Vider le panier</Button>
-			</section>
-      {/* /Panier */}
     </SectionContainer>
   );
 }
