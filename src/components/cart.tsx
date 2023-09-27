@@ -14,7 +14,7 @@ export default function Cart() {
             
       
       <section className="w-full space-y-8">
-      <CartCounter/>
+      
       {
         lines.map((line) => (
           <ProductCartLine

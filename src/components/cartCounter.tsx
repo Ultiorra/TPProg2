@@ -7,23 +7,13 @@ import { use, useEffect, useState } from "react";
 export default function CartCounter() {
     console.log("render CartCounter");
 
-    const lines = useCart((state) => state.lines);
-    const  [qtyCumul, setQtyCumul] = useState(0);
+    const count = useCart((state) => state.count);
 
-    useEffect(() => {
-        let qtyCumul = 0;
-        lines.forEach((line) => {
-            qtyCumul += line.qty;
-        });
-        setQtyCumul(qtyCumul);
-    }, [lines]);
-
-    
 
 
     return (
        
-            <h3 className="w-full">  { qtyCumul } </h3>
+            <h3 className="w-full">  { count } </h3>
     );
 
 

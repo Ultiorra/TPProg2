@@ -7,6 +7,7 @@ import { ProductLineData } from '../types';
 
 export const useCart = create<Cartdata>(() => ({
   lines: [],
+  count : 0,
 }));
 
 
@@ -19,16 +20,20 @@ export const useCart = create<Cartdata>(() => ({
 export function addLine(product: ProductData) {
     const cartItems = useCart.getState().lines;
     const productIndex = cartItems.findIndex((item) => item.product.id === product.id);
+    let countt = useCart.getState().count;
     if (productIndex === -1) {
         cartItems.push({
         qty: 1,
         product,
         });
+        countt += 1;
     } else {
         cartItems[productIndex].qty += 1;
+        
     }
     useCart.setState({ 
-        lines  : [... cartItems]
+        lines  : [... cartItems],
+        count : countt,
     });
 
 }
@@ -45,8 +50,11 @@ export function updateLine(line: ProductLineData) {
         cartItems.push(line);
     } else {
         cartItems[productIndex] = line;
+
     }
-    useCart.setState({ lines: [... cartItems] });
+    useCart.setState({ 
+        lines: [... cartItems],
+     });
 }
 
 /**
@@ -58,18 +66,26 @@ export function updateLine(line: ProductLineData) {
 export function removeLine(productId: number) {
     const cartItems = useCart.getState().lines;
     const productIndex = cartItems.findIndex((item) => item.product.id === productId);
+
     if (productIndex === -1) {
         return;
     }
     cartItems.splice(productIndex, 1);
-    useCart.setState({ lines : [... cartItems] });
+    const countLines = 
+    useCart.setState({ lines : [... cartItems],
+        count : useCart.getState().count - 1,
+        
+     });
 }
 
 /**
  * Vide le contenu du panier actuel
  */
 export function clearCart() {
-    useCart.setState({ lines: [] });
+    useCart.setState({ lines: [],
+        count : 0,
+
+     });
 }
 
 /**
