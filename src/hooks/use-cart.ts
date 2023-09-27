@@ -5,8 +5,8 @@ import { ProductData } from '../../tp-kit/types';
 import { Cartdata } from '../types';
 import { ProductLineData } from '../types';
 
-const useCart = create<Cartdata>(() => ({
-  cartItems: [],
+export const useCart = create<Cartdata>(() => ({
+  lines: [],
 }));
 
 
@@ -17,7 +17,7 @@ const useCart = create<Cartdata>(() => ({
  * @param product 
  */
 export function addLine(product: ProductData) {
-    const cartItems = useCart.getState().cartItems;
+    const cartItems = useCart.getState().lines;
     const productIndex = cartItems.findIndex((item) => item.product.id === product.id);
     if (productIndex === -1) {
         cartItems.push({
@@ -27,7 +27,10 @@ export function addLine(product: ProductData) {
     } else {
         cartItems[productIndex].qty += 1;
     }
-    useCart.setState({ cartItems });
+    useCart.setState({ 
+        lines  : [... cartItems]
+    });
+
 }
 
 /**
@@ -36,14 +39,14 @@ export function addLine(product: ProductData) {
  * @param line 
  */
 export function updateLine(line: ProductLineData) {
-    const cartItems = useCart.getState().cartItems;
+    const cartItems = useCart.getState().lines;
     const productIndex = cartItems.findIndex((item) => item.product.id === line.product.id);
     if (productIndex === -1) {
         cartItems.push(line);
     } else {
         cartItems[productIndex] = line;
     }
-    useCart.setState({ cartItems });
+    useCart.setState({ lines: [... cartItems] });
 }
 
 /**
@@ -53,20 +56,20 @@ export function updateLine(line: ProductLineData) {
  * @returns 
  */
 export function removeLine(productId: number) {
-    const cartItems = useCart.getState().cartItems;
+    const cartItems = useCart.getState().lines;
     const productIndex = cartItems.findIndex((item) => item.product.id === productId);
     if (productIndex === -1) {
         return;
     }
     cartItems.splice(productIndex, 1);
-    useCart.setState({ cartItems });
+    useCart.setState({ lines : [... cartItems] });
 }
 
 /**
  * Vide le contenu du panier actuel
  */
 export function clearCart() {
-    useCart.setState({ cartItems: [] });
+    useCart.setState({ lines: [] });
 }
 
 /**
