@@ -1,133 +1,136 @@
-import {
-  BreadCrumbs,
-  Button,
-  FormattedPrice,
-  ProductCardLayout,
-  ProductGridLayout,
-  ProductRating,
-  ProductImage,
-  SectionContainer,
-} from "tp-kit/components";
-import { NextPageProps } from "../../../types";
+import { ProductFilters } from '../../../components/product-filters';
+import {ProductList} from '../../../components/product-list';
+import { ProductAttributesTable } from '../../../components/product-attributes-table';
+import Image from 'next/image'
+import { notFound } from 'next/navigation'
+import { BreadCrumbs, Button, Heading, ProductCardLayout, ProductGridLayout, ProductRating, SectionContainer } from 'tp-kit/components';
 import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
-import { Metadata } from "next";
-import {
-  ProductAttribute,
-  ProductAttributesTable,
-} from "../../../components/product-attributes-table";
-const product = {
-  ...PRODUCTS_CATEGORY_DATA[0].products[0],
-  category: {
-    ...PRODUCTS_CATEGORY_DATA[0],
-    products: PRODUCTS_CATEGORY_DATA[0].products.slice(1),
-  },
-};
-
+const categories = PRODUCTS_CATEGORY_DATA;
+import {NextPageProps} from "../../../types";
+import { Metadata } from 'next';
+import AddToCartButton from '../../../components/addToCartButton';
+import {ProductsCategoryData,ProductData} from "tp-kit/types";  
 type Props = {
-  categorySlug: string;
-  productSlug: string;
-};
-
-export async function generateMetadata({
-  params,
-  searchParams,
-}: NextPageProps<Props>): Promise<Metadata> {
-  return {
-    title: product.name,
-    description:
-      product.desc ??
-      `Succombez pour notre ${product.name} et commandez-le sur notre site !`,
-  };
+  categorySlug : string
+  productSlug : string
 }
 
-const productAttributes: ProductAttribute[] = [
-  { label: "Intensité", rating: 3 },
-  { label: "Volupté", rating: 2 },
-  { label: "Amertume", rating: 1 },
-  { label: "Onctuosité", rating: 4 },
-  { label: "Instagramabilité", rating: 5 },
-];
+export async function generateMetadata({params} : NextPageProps<Props>) : Promise<Metadata> {
+  const currentcategory = categories.filter(category => {
+    return category.slug == params.categorySlug
+  })[0]
 
-export default async function ProductPage({ params }: NextPageProps<Props>) {
-  return (
-    <SectionContainer wrapperClassName="max-w-5xl">
+  if (!currentcategory) notFound();
+
+  const currentproduct = currentcategory.products.filter(product => {
+    return product.slug == params.productSlug
+  })[0]
+
+  if (!currentproduct) notFound();
+
+  return {
+    title: currentproduct.name ,
+    description: currentproduct.desc != "" ? currentproduct.desc : "Succombez pour notre " + currentproduct.name + " et commandez-le sur notre site !"
+  }
+}
+
+export default function Home({params} : NextPageProps<Props>) {
+  let currentcategories = categories.filter(category => {
+    return category.slug == params.categorySlug
+  })[0]
+
+  if (!currentcategories) notFound();
+
+  let currentproduct = currentcategories.products.filter(product => {
+    return product.slug == params.productSlug
+  })[0]
+
+  if (!currentproduct) notFound();
+  return ( 
+    <main>
       <BreadCrumbs
-        className="my-8"
-        items={[
-          {
-            label: "Accueil",
-            url: "/",
-          },
-          {
-            label: product.category.name,
-            url: `/${product.category.slug}`,
-          },
-          {
-            label: product.name,
-            url: `/${product.path}`,
-          },
-        ]}
-      />
+                items={[
+                    {
+                        label: 'Home',
+                        url: '/',   
+                    },
+                    {
+                        label: currentcategories.name,
+                        url: `/${currentcategories.slug}`,
+                    },
+                    {
+                        label: currentproduct.name,
+                        url: `/${currentcategories.slug}/${currentproduct.slug}`,
+                    },  
+                ]}
 
-      {/* Produit */}
-      <section className="flex flex-col md:flex-row justify-center gap-8">
-        {/* Product Image */}
-        <div className="relative">
-          <ProductImage
-            {...product}
-            priority
-            className="rounded-lg sticky top-12 object-cover sm:aspect-video md:aspect-auto w-full md:w-[300px]"
-          />
-        </div>
-
-        {/* Product body */}
-        <div className="flex-1">
-          <div className="prose prose-lg">
-            {/* Product Name */}
-            <h1>{product.name}</h1>
-
-            {/* Product Rating */}
-            <ProductRating value={4} size={18} />
-
-            {/* Desc */}
-            <p>{product.desc}</p>
-
-            {/* Prix et ajout au panier */}
-            <div className="flex justify-between items-center gap-8">
-              <p className="!my-0 text-xl">
-                <FormattedPrice price={product.price} />
-              </p>
-              <Button variant={"primary"}>Ajouter au panier</Button>
+            
+        />
+      <SectionContainer>
+        <div className="flex flex-row">
+          <Image src={currentproduct.img} width={500} height={500} alt='product image' />
+          <div className="flex flex-col" style={{marginTop: '50px', marginLeft: '2rem'}}>
+            <article className="prose lg:prose-xl"
+                >
+                  <h1 className="text-2xl font-bold">
+                {currentproduct.name}
+              </h1>
+            </article>
+            <div style={{marginTop: '2rem', marginBottom: '2rem'}}>
+              <ProductRating value={Math.random() *5 } size={24}/>
             </div>
-          </div>
-
-          {/* Products attribute */}
-          <ProductAttributesTable className="mt-6" data={productAttributes} />
+            <p className="text-2xl font-bold" style={{marginTop: '2rem', marginBottom: '2rem'}}>
+              {currentproduct.desc}
+            </p>
+            <div className="flex flex-row" style={{marginTop: '2rem', marginBottom: '2rem'}}>
+              <p className="text-2xl font-bold">
+                {currentproduct.price}€
+              </p>
+              <div className="flex flex-row" style={{marginLeft: '50rem'}}>
+                <AddToCartButton product={currentproduct}/>
+              </div>
+            </div>
+            <ProductAttributesTable data={[
+                { label: "Intensité", rating: Math.random() *5  },
+                { label: "Volupté", rating: Math.random() *5  },
+                { label: "Amertume", rating: Math.random() *5  },
+                { label: "Onctuosité", rating: Math.random() *5  },
+                { label: "Instagramabilité", rating: Math.random() *5  },
+              ]} />
         </div>
-      </section>
-
-      {/* Related products */}
-      <section>
-        <div className="mt-24">
-          <div className="prose prose-lg mb-8">
-            <h2>Vous aimerez aussi</h2>
-          </div>
-
-          <ProductGridLayout products={product.category.products}>
-            {(product) => (
-              <ProductCardLayout
-                product={product}
-                button={
-                  <Button variant="ghost" className="flex-1 !py-4">
-                    Ajouter au panier
-                  </Button>
-                }
-              />
-            )}
-          </ProductGridLayout>
         </div>
-      </section>
-      {/* /Related products */}
-    </SectionContainer>
-  );
+        <Heading
+                          as="h1"
+                          size="md"
+                          weight="bold"
+                          >
+                          Vous aimerez aussi:
+                      </Heading>
+        <ProductGridLayout products={
+          currentcategories.products.filter(product => {
+            return product.slug != params.productSlug
+          })
+        } 
+        children={(producte : ProductData) => (
+          <ProductCardLayout
+          button={(<Button
+                  variant="light"
+              >
+              Ajouter au panier
+          </Button>)}
+      product={{
+          desc: producte.desc,
+          id: producte.id,
+          img: producte.img,
+          name: producte.name,
+          path: producte.path,
+          price: producte.price,
+          slug: producte.slug
+      }}  
+      />
+        )}
+        />
+      </SectionContainer>
+    </main>
+  )
 }

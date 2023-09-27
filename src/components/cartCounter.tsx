@@ -6,13 +6,8 @@ import { addLine, useCart, updateLine, computeCartTotal,removeLine,clearCart } f
 import { use, useEffect, useState } from "react";
 export default function CartCounter() {
     console.log("render CartCounter");
-
     const count = useCart((state) => state.count);
-
-
-
     return (
-       
             <h3 className="w-full">  { count } </h3>
     );
 

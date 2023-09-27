@@ -4,7 +4,6 @@ import { ProductCartLine } from "../../tp-kit/components/products/product-cart-l
 const products = PRODUCTS_CATEGORY_DATA[0].products.slice(0, 3);
 import { addLine, useCart, updateLine, computeCartTotal,removeLine,clearCart } from "../hooks/use-cart";
 import { use, useEffect } from "react";
-import CartCounter from "./cartCounter";
 export default function Cart() {
     const lines = useCart((state) => state.lines);
     return (
