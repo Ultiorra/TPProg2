@@ -10,21 +10,20 @@ import {NextPageProps} from "../../../types";
 import { Metadata } from 'next';
 import AddToCartButton from '../../../components/addToCartButton';
 import {ProductsCategoryData,ProductData} from "tp-kit/types";  
+import prisma from '../../../../prisma/prisma';
+import cache from 'react'
+import { getProduit } from '../../../utils/database';
 type Props = {
   categorySlug : string
   productSlug : string
 }
 
 export async function generateMetadata({params} : NextPageProps<Props>) : Promise<Metadata> {
-  const currentcategory = categories.filter(category => {
-    return category.slug == params.categorySlug
-  })[0]
+  const results = await getProduit(params.categorySlug, params.productSlug)
+  const currentproduct = results[0]
+  const currentcategory = results[1]
 
   if (!currentcategory) notFound();
-
-  const currentproduct = currentcategory.products.filter(product => {
-    return product.slug == params.productSlug
-  })[0]
 
   if (!currentproduct) notFound();
 
@@ -34,16 +33,14 @@ export async function generateMetadata({params} : NextPageProps<Props>) : Promis
   }
 }
 
-export default function Home({params} : NextPageProps<Props>) {
-  let currentcategories = categories.filter(category => {
-    return category.slug == params.categorySlug
-  })[0]
+export default async function Home({params} : NextPageProps<Props>) {
+  const results = await getProduit(params.categorySlug, params.productSlug)
+  const currentproduct = results[0]
+  const currentcategories = results[1]
 
   if (!currentcategories) notFound();
 
-  let currentproduct = currentcategories.products.filter(product => {
-    return product.slug == params.productSlug
-  })[0]
+  
 
   if (!currentproduct) notFound();
   return ( 

@@ -6,31 +6,13 @@ import { Metadata } from "next";
 import prisma from "../../../prisma/prisma";
 import { ProductsCategoryData } from "tp-kit/types";
 import { notFound } from "next/navigation";
+import { getCategory } from "../../utils/database";
 
 
+const categoryCache: { [categorySlug: string]: ProductsCategoryData | null } = {};
 type Props = {
   categorySlug: string;
 };
-async function getCategory(categorySlug: string) {
-  const categoryCache: { [categorySlug: string]: ProductsCategoryData | null } = {};
-  if (categoryCache[categorySlug] !== undefined) {
-    return categoryCache[categorySlug]; 
-  }
-  const category = await prisma.productCategory.findFirst({
-    where: {
-      slug: categorySlug
-    },
-    include: {
-      products: true,
-    },
-  })  
-  categoryCache[categorySlug] = category
-  if (!category) {
-    return notFound()
-  }
-
-  return category
-}
 
 export async function generateMetadata({ params, searchParams} : NextPageProps<Props>) : Promise<Metadata> {
   const category = await getCategory(params.categorySlug)
@@ -42,6 +24,9 @@ export async function generateMetadata({ params, searchParams} : NextPageProps<P
 
 export default async function CategoryPage({params}: NextPageProps<Props>) {
   const category = await getCategory(params.categorySlug)
+  if (!category) {
+    return notFound()
+  }
   return <SectionContainer>
     <BreadCrumbs 
       items={[
