@@ -5,6 +5,9 @@
   "workspaces": [
     "tp-kit"
   ],
+  "prisma": {
+	  "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+	},
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -29,6 +32,7 @@
     "zustand": "^4.4.1"
   },
   "devDependencies": {
-    "prisma": "^5.5.0"
+    "prisma": "^5.5.0",
+    "ts-node": "^10.9.1"
   }
 }
