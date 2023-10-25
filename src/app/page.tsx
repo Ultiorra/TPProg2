@@ -3,6 +3,7 @@ import { ProductList } from "../components/product-list";
 import { Metadata } from "next";
 import prisma from "../../prisma/prisma";
 import { ProductsCategoryData } from "tp-kit/types";
+import { getAllCategories } from "../utils/database";
 
 
 export const metadata:Metadata = {
@@ -11,11 +12,7 @@ export const metadata:Metadata = {
 }
 
 export default async function Home() {
-  const categories =  await prisma.productCategory.findMany({
-    include: {
-      products: true,
-    },
-  }) 
+  const categories =  await getAllCategories()
   
   return (<SectionContainer>
     <BreadCrumbs items={[

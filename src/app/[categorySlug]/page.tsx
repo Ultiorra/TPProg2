@@ -7,9 +7,6 @@ import prisma from "../../../prisma/prisma";
 import { ProductsCategoryData } from "tp-kit/types";
 import { notFound } from "next/navigation";
 import { getCategory } from "../../utils/database";
-
-
-const categoryCache: { [categorySlug: string]: ProductsCategoryData | null } = {};
 type Props = {
   categorySlug: string;
 };

@@ -20,23 +20,44 @@ export const getCategory = cache (
       }
       
 )
+export const getCategoryWithoutProduct = cache (
+    async (categorySlug: string , productSlug: string) => {
 
-export const getProduit = cache (
-    async (categorySlug: string, productSlug: string) => {
+
+        console.log("categoryCache")
         const category = await prisma.productCategory.findFirst({
           where: {
             slug: categorySlug
           },
           include: {
-            products: 
-            {
-              where: {
-                slug: {not : productSlug}
-              }
+            products: {
+                where: {
+                    slug: {
+                        not: productSlug
+                    }
+                }
             },
-      
-          },
+            }
         })
+
+      
+        return category
+      }
+      
+)
+export const getAllCategories = cache (
+    async () => {
+        const categories = await prisma.productCategory.findMany({
+          include: {
+            products: true,
+          },
+        })  
+        return categories
+      }
+)
+export const getProduit = cache (
+    async (categorySlug: string, productSlug: string) => {
+        const category = await getCategoryWithoutProduct(categorySlug, productSlug)
        if(!category) return [null, null]
         const produit = await prisma.product.findFirst({
           where: {
