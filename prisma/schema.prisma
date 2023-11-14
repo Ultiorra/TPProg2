@@ -33,7 +33,7 @@ model Order {
   id          Int       @id @default(autoincrement())
   createdAt   DateTime  @default(now())
   completedAt DateTime?
-  status      OrderStatusEnum
+  status      OrderStatusEnum @default(IN_PROGRESS)
   total       Float
   lines       OrderLine[]
 }
@@ -47,6 +47,8 @@ model OrderLine {
   subtotal Float
   order   Order    @relation(fields: [orderId], references: [id])
   product Product  @relation(fields: [productId], references: [id])
+
+  @@unique([orderId,productId])
 }
 
 enum OrderStatusEnum {

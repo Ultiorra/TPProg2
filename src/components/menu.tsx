@@ -3,17 +3,26 @@ import CartCounter from "../components/cartCounter";
 import { FC, memo, Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { MenuBar, Button } from "tp-kit/components";
-import { ShoppingBag, X } from "@phosphor-icons/react";
+import { ShoppingBag, X,Person} from "@phosphor-icons/react";
 import  Cart  from "../components/cart";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 type Props = {};
 
 const Menu: FC<Props> = memo(function () {
+  const router = useRouter();
   return (
+  
     <MenuBar
       trailing={
         <Popover as="div" className="flex justify-end">
           {({ open }) => (
             <>
+            <Button  variant={"ghost"} className={"!rounded-full !p-0 flex justify-center items-center aspect-square relative text-3xl"} onClick={() => router.push("/mon-compte")}>
+                {<Person size={24} weight="regular" />}
+
+               
+              </Button>
               <Popover.Button as={Button} variant={"ghost"} className={"!rounded-full !p-0 flex justify-center items-center aspect-square relative text-3xl"}>
                 {open 
                   ? <X size={18} weight="regular" />

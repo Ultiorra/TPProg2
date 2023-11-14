@@ -4,6 +4,7 @@ import { ProductCartLine } from "../../tp-kit/components/products/product-cart-l
 const products = PRODUCTS_CATEGORY_DATA[0].products.slice(0, 3);
 import { addLine, useCart, updateLine, computeCartTotal,removeLine,clearCart } from "../hooks/use-cart";
 import { use, useEffect } from "react";
+import { createOrder } from "../actions/create-orders"
 export default function Cart() {
     const lines = useCart((state) => state.lines);
     return (
@@ -40,7 +41,8 @@ export default function Cart() {
         </div>
       
 
-        <Button variant={"primary"} fullWidth>Commander</Button>
+        <Button variant={"primary"} onClick={() => createOrder(lines)}
+                fullWidth>Commander</Button>
 
       
         
