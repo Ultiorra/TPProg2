@@ -14,8 +14,6 @@ export default async function CommandeLayout({children} : Props) {
     function closeModal() {
         router.replace('/mon-compte')
     }
-
-    console.log("CommandeLayout")
   return (
     <Transition appear show={true} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal} static>
